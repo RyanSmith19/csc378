@@ -8,7 +8,8 @@ public class PlayerController : MonoBehaviour
 {
    private float horizontal;
     private float moveSpeed = 12f;
-    private float jumpingPower = 20f;
+    private float jumpingPower = 30f;
+    private float onGroundValue = 0.2f;
     private bool isFacingRight = true;
 
     [SerializeField] private Rigidbody2D rb;
@@ -27,14 +28,16 @@ public class PlayerController : MonoBehaviour
         // Move the player horizontally
         MovePlayer(horizontal);
 
-        // Check if the player is grounded
-        
-
         // Jump if the player is grounded and the jump button is pressed
-        if (Input.GetButtonDown("Jump") )
+        if (Input.GetButtonDown("Jump") && IsOnGround())
         {
             Jump();
         }
+    }
+
+    private bool IsOnGround(){
+        // if the velocity is less than the value then player can jump
+        return Mathf.Abs(rb.velocity.y) <= onGroundValue;
     }
     
     private bool IsGrounded()
