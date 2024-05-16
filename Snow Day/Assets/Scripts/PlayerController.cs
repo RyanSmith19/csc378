@@ -15,10 +15,24 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Rigidbody2D rb;
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private AudioSource jumpSound; 
+    [SerializeField] private Sprite[] walkSprites;
 
     // Position and size of the ground check box
     private Vector2 groundCheckBoxPosition;
     private Vector2 groundCheckBoxSize = new Vector2(0.6f, 0.2f);
+
+    public Sprite idleSprite; // Original sprite
+    private int currentSpriteIndex = 0; // Index of the current sprite
+    private float spriteChangeThreshold = 0.1f; // Threshold for changing sprites
+    private float distanceSinceLastSpriteChange = 0f; // Distance since last sprite change
+
+    private SpriteRenderer spriteRenderer;
+
+    void Start()
+    {
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        spriteRenderer.sprite = idleSprite; // Set the original sprite
+    }
 
     void Update()
     {
@@ -33,6 +47,29 @@ public class PlayerController : MonoBehaviour
         {
             Jump();
         }
+
+               if (horizontal != 0)
+        {
+            // Update sprite based on horizontal movement
+            distanceSinceLastSpriteChange += Mathf.Abs(horizontal) * moveSpeed * Time.deltaTime;
+            if (distanceSinceLastSpriteChange > spriteChangeThreshold)
+            {
+                ChangeSprite();
+                distanceSinceLastSpriteChange = 0f;
+            }
+        }
+        else
+        {
+            // Change back to the original sprite when not moving
+            spriteRenderer.sprite = idleSprite;
+        }
+
+    }
+
+    private void ChangeSprite()
+    {
+        currentSpriteIndex = (currentSpriteIndex + 1) % walkSprites.Length;
+        spriteRenderer.sprite = walkSprites[currentSpriteIndex];
     }
 
     private bool IsOnGround(){
@@ -86,11 +123,5 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
-    }
-
-    private void OnDraw()
-    {
-        Gizmos.color = Color.red;
-        Gizmos.DrawWireCube(groundCheckBoxPosition, groundCheckBoxSize);
     }
 }
