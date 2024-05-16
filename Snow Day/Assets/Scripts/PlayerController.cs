@@ -118,7 +118,7 @@ public class PlayerController : MonoBehaviour
         rb.velocity = new Vector2(rb.velocity.x, jumpingPower);
 
         // Play the jump sound
-        //jumpSound.Play();
+        jumpSound.Play();
     }
 
     // Function to flip the player's sprite
