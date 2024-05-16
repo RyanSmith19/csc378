@@ -16,6 +16,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private AudioSource jumpSound; 
     [SerializeField] private Sprite[] walkSprites;
+    [SerializeField] private float spriteSize = 1f;
 
     // Position and size of the ground check box
     private Vector2 groundCheckBoxPosition;
@@ -23,7 +24,7 @@ public class PlayerController : MonoBehaviour
 
     public Sprite idleSprite; // Original sprite
     private int currentSpriteIndex = 0; // Index of the current sprite
-    private float spriteChangeThreshold = 0.1f; // Threshold for changing sprites
+    private float spriteChangeThreshold = 1f; // Threshold for changing sprites
     private float distanceSinceLastSpriteChange = 0f; // Distance since last sprite change
 
     private SpriteRenderer spriteRenderer;
@@ -32,7 +33,11 @@ public class PlayerController : MonoBehaviour
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         spriteRenderer.sprite = idleSprite; // Set the original sprite
+
+        // Set the size of the sprite renderer
+        spriteRenderer.transform.localScale = new Vector3(spriteSize, spriteSize, 1f);
     }
+
 
     void Update()
     {
