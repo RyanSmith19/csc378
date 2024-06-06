@@ -34,6 +34,8 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private HealthBar healthBar;
 
+    [SerializeField] private float healthRegenRate = 1f; // Health points per second
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -44,6 +46,8 @@ public class PlayerController : MonoBehaviour
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+
+        StartCoroutine(RegenerateHealth());
     }
 
     void Update()
@@ -169,5 +173,19 @@ public class PlayerController : MonoBehaviour
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
         transform.position = FindObjectOfType<Respawn>().respawnPoint.position;
+    }
+
+    private IEnumerator RegenerateHealth()
+    {
+        while (true)
+        {
+            if (currentHealth < maxHealth)
+            {
+                currentHealth += Mathf.RoundToInt(healthRegenRate);
+                currentHealth = Mathf.Clamp(currentHealth, 0, maxHealth);
+                healthBar.SetHealth(currentHealth);
+            }
+            yield return new WaitForSeconds(1f);
+        }
     }
 }
