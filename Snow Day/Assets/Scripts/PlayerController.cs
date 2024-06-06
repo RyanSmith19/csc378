@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-   private float horizontal;
+    private float horizontal;
     private float moveSpeed = 12f;
     private float jumpingPower = 30f;
     private float onGroundValue = 0.2f;
@@ -29,6 +29,11 @@ public class PlayerController : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    [SerializeField] private int maxHealth = 100;
+    private int currentHealth;
+
+    [SerializeField] private HealthBar healthBar;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -36,8 +41,10 @@ public class PlayerController : MonoBehaviour
 
         // Set the size of the sprite renderer
         spriteRenderer.transform.localScale = new Vector3(spriteSize, spriteSize, 1f);
-    }
 
+        currentHealth = maxHealth;
+        healthBar.SetMaxHealth(maxHealth);
+    }
 
     void Update()
     {
@@ -53,7 +60,7 @@ public class PlayerController : MonoBehaviour
             Jump();
         }
 
-               if (horizontal != 0)
+        if (horizontal != 0)
         {
             // Update sprite based on horizontal movement
             distanceSinceLastSpriteChange += Mathf.Abs(horizontal) * moveSpeed * Time.deltaTime;
@@ -68,7 +75,6 @@ public class PlayerController : MonoBehaviour
             // Change back to the original sprite when not moving
             spriteRenderer.sprite = idleSprite;
         }
-
     }
 
     private void ChangeSprite()
@@ -77,7 +83,8 @@ public class PlayerController : MonoBehaviour
         spriteRenderer.sprite = walkSprites[currentSpriteIndex];
     }
 
-    private bool IsOnGround(){
+    private bool IsOnGround()
+    {
         // if the velocity is less than the value then player can jump
         return Mathf.Abs(rb.velocity.y) <= onGroundValue;
     }
@@ -111,7 +118,7 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    // Function to make the player jum
+    // Function to make the player jump
     void Jump()
     {
         // Apply an upward force to the rigidbody to make the player jump
@@ -128,5 +135,39 @@ public class PlayerController : MonoBehaviour
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("DamagingObject"))
+        {
+            Rigidbody2D fallingObjectRb = collision.gameObject.GetComponent<Rigidbody2D>();
+            if (fallingObjectRb != null)
+            {
+                float impactVelocity = fallingObjectRb.velocity.magnitude;
+                if (impactVelocity > 3f) // Adjust the threshold as needed
+                {
+                    TakeDamage(10);
+                }
+            }
+        }
+    }
+
+    private void TakeDamage(int damage)
+    {
+        currentHealth -= damage;
+        healthBar.SetHealth(currentHealth);
+
+        if (currentHealth <= 0)
+        {
+            Respawn();
+        }
+    }
+
+    private void Respawn()
+    {
+        currentHealth = maxHealth;
+        healthBar.SetHealth(currentHealth);
+        transform.position = FindObjectOfType<Respawn>().respawnPoint.position;
     }
 }

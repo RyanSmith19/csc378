@@ -1505,7 +1505,7 @@ Transform:
   m_GameObject: {fileID: 206439789}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1217.3, y: 111.8, z: 0}
+  m_LocalPosition: {x: 6.4, y: 14.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1607,6 +1607,8 @@ MonoBehaviour:
   - {fileID: 21300000, guid: 0c46208e550345848bc788d8f592a45c, type: 3}
   spriteSize: 1
   idleSprite: {fileID: 21300000, guid: 635e632c67001c547b3d3e60b1c92e4f, type: 3}
+  maxHealth: 100
+  healthBar: {fileID: 0}
 --- !u!114 &206439795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -20131,7 +20133,7 @@ GameObject:
   - component: {fileID: 593876314}
   m_Layer: 0
   m_Name: Circle (46)
-  m_TagString: Untagged
+  m_TagString: DamagingObject
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
