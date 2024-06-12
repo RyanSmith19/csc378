@@ -36,6 +36,17 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] private float healthRegenRate = 1f; // Health points per second
 
+    [SerializeField] private GameObject snowballPrefab; // Reference to the snowball prefab
+    [SerializeField] private Transform throwPoint; // Point from where the snowball will be thrown
+    [SerializeField] private float throwForce = 10f; // Force with which the snowball will be thrown
+    [SerializeField] private float throwAngle = 45f; // Angle at which the snowball will be thrown
+    [SerializeField] private float throwCooldown = 1f; // Cooldown time between throws
+    [SerializeField] private float maxSnowballVelocity = 20f; // Maximum velocity for the snowball
+
+    private bool canThrow = true;
+
+    private Collider2D playerCollider; // Reference to the player's collider
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -48,6 +59,8 @@ public class PlayerController : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
 
         StartCoroutine(RegenerateHealth());
+
+        playerCollider = GetComponent<Collider2D>(); // Get the player's collider
     }
 
     void Update()
@@ -78,6 +91,12 @@ public class PlayerController : MonoBehaviour
         {
             // Change back to the original sprite when not moving
             spriteRenderer.sprite = idleSprite;
+        }
+
+        // Check if the throw button is pressed and the player can throw
+        if (Input.GetButtonDown("Fire1") && canThrow)
+        {
+            ThrowSnowball();
         }
     }
 
@@ -187,5 +206,41 @@ public class PlayerController : MonoBehaviour
             }
             yield return new WaitForSeconds(1f);
         }
+    }
+
+    private void ThrowSnowball()
+    {
+        // Instantiate the snowball at the throw point
+        GameObject snowball = Instantiate(snowballPrefab, throwPoint.position, throwPoint.rotation);
+
+        // Get the Rigidbody2D component of the snowball
+        Rigidbody2D snowballRb = snowball.GetComponent<Rigidbody2D>();
+
+        // Determine the throw direction based on the player's facing direction
+        float direction = isFacingRight ? 1f : -1f;
+        Vector2 throwDirection = new Vector2(direction * Mathf.Cos(throwAngle * Mathf.Deg2Rad), Mathf.Sin(throwAngle * Mathf.Deg2Rad));
+        Vector2 throwVelocity = throwDirection * throwForce;
+
+        // Set the snowball's velocity to the player's current velocity plus the throw velocity
+        Vector2 finalVelocity = rb.velocity + throwVelocity;
+
+        // Clamp the final velocity to the maximum allowed velocity
+        finalVelocity = Vector2.ClampMagnitude(finalVelocity, maxSnowballVelocity);
+
+        // Apply the clamped velocity to the snowball
+        snowballRb.velocity = finalVelocity;
+
+        // Ignore collision between the snowball and the player
+        Physics2D.IgnoreCollision(playerCollider, snowball.GetComponent<Collider2D>());
+
+        // Start the cooldown coroutine
+        StartCoroutine(ThrowCooldown());
+    }
+
+    private IEnumerator ThrowCooldown()
+    {
+        canThrow = false;
+        yield return new WaitForSeconds(throwCooldown);
+        canThrow = true;
     }
 }
