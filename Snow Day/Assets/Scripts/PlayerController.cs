@@ -47,6 +47,8 @@ public class PlayerController : MonoBehaviour
 
     private Collider2D playerCollider; // Reference to the player's collider
 
+    private Respawn respawn;
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -61,6 +63,8 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(RegenerateHealth());
 
         playerCollider = GetComponent<Collider2D>(); // Get the player's collider
+
+        respawn = FindObjectOfType<Respawn>();
     }
 
     void Update()
@@ -191,7 +195,15 @@ public class PlayerController : MonoBehaviour
     {
         currentHealth = maxHealth;
         healthBar.SetHealth(currentHealth);
-        transform.position = FindObjectOfType<Respawn>().respawnPoint.position;
+
+        if (respawn != null)
+        {
+            transform.position = respawn.GetCurrentCheckpoint();
+        }
+        else
+        {
+            Debug.LogWarning("Respawn component not found!");
+        }
     }
 
     private IEnumerator RegenerateHealth()
