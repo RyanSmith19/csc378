@@ -16,6 +16,9 @@ public class EnemyController : MonoBehaviour
 
     [SerializeField] private HealthBar healthBar;
 
+    [SerializeField] private GameObject objectToDestroy1; // First object to destroy
+    [SerializeField] private GameObject objectToDestroy2; // Second object to destroy
+
     private bool canThrow = true;
 
     void Start()
@@ -109,6 +112,17 @@ public class EnemyController : MonoBehaviour
         {
             Destroy(healthBar.gameObject);
         }
+
+        if (objectToDestroy1 != null)
+        {
+            Destroy(objectToDestroy1);
+        }
+
+        if (objectToDestroy2 != null)
+        {
+            Destroy(objectToDestroy2);
+        }
+
         Destroy(gameObject);
     }
 }
