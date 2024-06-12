@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Snowball : MonoBehaviour
+public class EnemySnowball : MonoBehaviour
 {
     private void OnCollisionEnter2D(Collision2D collision)
     {
@@ -9,13 +9,13 @@ public class Snowball : MonoBehaviour
             // Logic to break the obstacle
             Destroy(collision.gameObject);
         }
-        else if (collision.gameObject.CompareTag("Enemy"))
+        else if (collision.gameObject.CompareTag("Player"))
         {
-            // Logic to damage the enemy
-            EnemyController enemy = collision.gameObject.GetComponent<EnemyController>();
-            if (enemy != null)
+            // Logic to damage the player
+            PlayerController player = collision.gameObject.GetComponent<PlayerController>();
+            if (player != null)
             {
-                enemy.TakeDamage(10); // Adjust the damage value as needed
+                player.TakeDamage(30); // Adjust the damage value as needed
             }
         }
 
