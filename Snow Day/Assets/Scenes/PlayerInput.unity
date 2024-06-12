@@ -21484,6 +21484,7 @@ MonoBehaviour:
   throwAngle: 45
   throwCooldown: 1
   maxSnowballVelocity: 30
+  knockbackForce: 200
 --- !u!114 &206439795
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21774,7 +21775,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.4458215}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -21785,7 +21786,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.19, y: 2.88}
+  m_Size: {x: 2.19, y: 5.7716413}
   m_EdgeRadius: 0
 --- !u!114 &226053543
 MonoBehaviour:
@@ -60364,7 +60365,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -165.05591, y: -207.89003}
+  m_AnchoredPosition: {x: -163.47, y: -211.6}
   m_SizeDelta: {x: 100, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &848775846
@@ -142009,8 +142010,8 @@ Transform:
   m_GameObject: {fileID: 2069835782}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 276.63, y: 26.38, z: 0}
-  m_LocalScale: {x: 4.16, y: 3.84, z: 3.1999998}
+  m_LocalPosition: {x: 278.3859, y: 22.990025, z: 0}
+  m_LocalScale: {x: 3.0513237, y: 1.5490559, z: 3.1999998}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}

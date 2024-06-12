@@ -27,6 +27,8 @@ public class EnemyController : MonoBehaviour
 
         currentHealth = maxHealth;
         healthBar.SetMaxHealth(maxHealth);
+
+        gameObject.tag = "Enemy"; // Ensure the enemy has the "Enemy" tag
     }
 
     void Update()
@@ -60,6 +62,11 @@ public class EnemyController : MonoBehaviour
 
             // Apply the clamped velocity to the snowball
             snowballRb.velocity = throwVelocity;
+
+            // Ignore collision between the snowball and the enemy
+            Collider2D snowballCollider = snowballs[i].GetComponent<Collider2D>();
+            Collider2D enemyCollider = GetComponent<Collider2D>();
+            Physics2D.IgnoreCollision(snowballCollider, enemyCollider);
         }
 
         // Ignore collisions between the snowballs

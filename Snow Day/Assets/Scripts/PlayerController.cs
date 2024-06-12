@@ -49,6 +49,8 @@ public class PlayerController : MonoBehaviour
 
     private Respawn respawn;
 
+    [SerializeField] private float knockbackForce = 10f; // Force of the knockback
+
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -178,6 +180,16 @@ public class PlayerController : MonoBehaviour
                 }
             }
         }
+        else if (collision.gameObject.CompareTag("Enemy"))
+        {
+            Knockback(collision.transform);
+        }
+    }
+
+    private void Knockback(Transform enemy)
+    {
+        Vector2 knockbackDirection = (transform.position - enemy.position).normalized;
+        rb.AddForce(knockbackDirection * knockbackForce, ForceMode2D.Impulse);
     }
 
     public void TakeDamage(int damage)
