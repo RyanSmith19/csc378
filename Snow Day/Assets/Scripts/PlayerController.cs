@@ -42,6 +42,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float throwAngle = 45f; // Angle at which the snowball will be thrown
     [SerializeField] private float throwCooldown = 1f; // Cooldown time between throws
     [SerializeField] private float maxSnowballVelocity = 20f; // Maximum velocity for the snowball
+    [SerializeField] private AudioSource throwSound; // Add this line
+    [SerializeField] private AudioSource deathSound; // Add this line
 
     private bool canThrow = true;
 
@@ -50,6 +52,11 @@ public class PlayerController : MonoBehaviour
     private Respawn respawn;
 
     [SerializeField] private float knockbackForce = 10f; // Force of the knockback
+
+    [SerializeField] private float fallDamageThreshold = 5f; // Height threshold for fall damage
+    [SerializeField] private int fallDamageMultiplier = 10; // Damage multiplier based on fall height
+
+    private float lastGroundedY; // The Y position when the player was last on the ground
 
     void Start()
     {
@@ -67,6 +74,8 @@ public class PlayerController : MonoBehaviour
         playerCollider = GetComponent<Collider2D>(); // Get the player's collider
 
         respawn = FindObjectOfType<Respawn>();
+
+        lastGroundedY = transform.position.y; // Initialize the last grounded Y position
     }
 
     void Update()
@@ -103,6 +112,12 @@ public class PlayerController : MonoBehaviour
         if (Input.GetButtonDown("Fire1") && canThrow)
         {
             ThrowSnowball();
+        }
+
+        // Update the last grounded Y position if the player is on the ground
+        if (IsOnGround())
+        {
+            lastGroundedY = transform.position.y;
         }
     }
 
@@ -184,6 +199,17 @@ public class PlayerController : MonoBehaviour
         {
             Knockback(collision.transform);
         }
+
+        // Check for fall damage
+        if (IsOnGround())
+        {
+            float fallDistance = lastGroundedY - transform.position.y;
+            if (fallDistance > fallDamageThreshold)
+            {
+                int fallDamage = Mathf.RoundToInt((fallDistance - fallDamageThreshold) * fallDamageMultiplier);
+                TakeDamage(fallDamage);
+            }
+        }
     }
 
     private void Knockback(Transform enemy)
@@ -199,6 +225,9 @@ public class PlayerController : MonoBehaviour
 
         if (currentHealth <= 0)
         {
+            // Play the death sound
+            deathSound.Play();
+
             Respawn();
         }
     }
@@ -256,6 +285,9 @@ public class PlayerController : MonoBehaviour
 
         // Ignore collision between the snowball and the player
         Physics2D.IgnoreCollision(playerCollider, snowball.GetComponent<Collider2D>());
+
+        // Play the throw sound
+        throwSound.Play();
 
         // Start the cooldown coroutine
         StartCoroutine(ThrowCooldown());

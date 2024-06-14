@@ -44,10 +44,10 @@ public class EnemyController : MonoBehaviour
 
     private void ThrowSnowball()
     {
-        float[] angles = { throwAngle - 15f, throwAngle, throwAngle + 15f }; // Three different angles
-        GameObject[] snowballs = new GameObject[angles.Length];
+        int numberOfSnowballs = 5; // Number of snowballs to throw
+        GameObject[] snowballs = new GameObject[numberOfSnowballs];
 
-        for (int i = 0; i < angles.Length; i++)
+        for (int i = 0; i < numberOfSnowballs; i++)
         {
             // Instantiate the snowball at the throw point
             snowballs[i] = Instantiate(snowballPrefab, throwPoint.position, throwPoint.rotation);
@@ -57,7 +57,10 @@ public class EnemyController : MonoBehaviour
 
             // Calculate the direction to the player
             Vector2 directionToPlayer = (player.position - throwPoint.position).normalized;
-            Vector2 throwDirection = new Vector2(directionToPlayer.x * Mathf.Cos(angles[i] * Mathf.Deg2Rad), Mathf.Sin(angles[i] * Mathf.Deg2Rad));
+
+            // Generate a random throw angle
+            float randomAngle = Random.Range(throwAngle - 20f, throwAngle + 20f);
+            Vector2 throwDirection = new Vector2(directionToPlayer.x * Mathf.Cos(randomAngle * Mathf.Deg2Rad), Mathf.Sin(randomAngle * Mathf.Deg2Rad));
             Vector2 throwVelocity = throwDirection * throwForce;
 
             // Clamp the final velocity to the maximum allowed velocity

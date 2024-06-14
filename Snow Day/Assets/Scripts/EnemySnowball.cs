@@ -15,7 +15,7 @@ public class EnemySnowball : MonoBehaviour
             PlayerController player = collision.gameObject.GetComponent<PlayerController>();
             if (player != null)
             {
-                player.TakeDamage(30); // Adjust the damage value as needed
+                player.TakeDamage(10); // Adjust the damage value as needed
             }
         }
 
