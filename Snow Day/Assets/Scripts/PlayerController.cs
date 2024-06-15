@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -298,5 +299,13 @@ public class PlayerController : MonoBehaviour
         canThrow = false;
         yield return new WaitForSeconds(throwCooldown);
         canThrow = true;
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (other.CompareTag("triggerending"))
+        {
+            SceneManager.LoadScene("CreditScene");
+        }
     }
 }
